@@ -12,6 +12,7 @@ services:
       - mongodb
     volumes:
       - .:/usr/src/node-app
+      - /usr/bin/git:/usr/bin/git
     networks:
       - node-network
 
