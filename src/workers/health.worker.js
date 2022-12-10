@@ -20,6 +20,9 @@ const healthWorker = (options) => ({
 
     const errorHandler = (err) => {
       this.errors.push(err);
+      if (this.errors.length > 5) {
+        this.errors = this.errors.slice(-5);
+      }
       console.error(`errors count: ${this.errors.lenght}`, err);
       if (this.errors.length === maxRetries) {
         telegramClient.post('/sendMessage', {
