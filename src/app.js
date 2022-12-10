@@ -63,6 +63,23 @@ console.debug('v1 api routes');
 // v1 api routes
 app.use('/v1', routes);
 
+const healthWorkerInstance = healthWorker();
+const workers = [
+  healthWorkerInstance,
+];
+workers.forEach((worker) => {
+  console.debug('starting worker', worker);
+  worker.start();
+});
+const router = express.Router();
+router.use('/', (req, res) => {
+  const status = healthWorkerInstance.error() ? httpStatus.BAD_GATEWAY : httpStatus.OK;
+  res.status(status).send({
+    status: !healthWorkerInstance.error(),
+  });
+});
+app.use(router);
+
 console.debug('send back a 404 error for any unknown api request');
 // send back a 404 error for any unknown api request
 app.use((req, res, next) => {
@@ -76,19 +93,5 @@ app.use(errorConverter);
 console.debug('handle error');
 // handle error
 app.use(errorHandler);
-const healthWorker = healthWorker();
-const workers = [
-  healthWorker,
-];
-workers.forEach((worker) => {
-  console.debug('starting worker', worker);
-  worker.start();
-});
-app.use('/', (req, res) => {
-  const status = healthWorker.error() ? httpStatus.BAD_GATEWAY : httpStatus.OK;
-  res.status(status).send({
-    status: !healthWorker.error(),
-  });
-});
 
 module.exports = app;
