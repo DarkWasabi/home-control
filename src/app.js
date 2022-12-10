@@ -73,6 +73,7 @@ workers.forEach((worker) => {
 });
 const router = express.Router();
 router.use('/', (req, res) => {
+  console.log(healthWorkerInstance);
   const status = healthWorkerInstance.error() ? httpStatus.BAD_GATEWAY : httpStatus.OK;
   res.status(status).send({
     status: !healthWorkerInstance.error(),
