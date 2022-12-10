@@ -30,13 +30,8 @@ class HealthWorker extends Worker {
     }
 
     const createWorker = () => setInterval(() => {
-      ping.promise.probe(pingHost, {
-        timeout: 2,
-        min_reply: 4,
-      }).then((res) => {
-        const alive = res.alive && res.times.length === 4;
-        console.log(res, `${res.host} is ${alive ? 'alive' : 'dead'}`);
-        if (!alive) {
+      axios.get(`http://${pingHost}:8080`).then((res) => {
+        if (!res.status > 400) {
           return errorHandler(res);
         }
         // clear errors on success
@@ -44,10 +39,9 @@ class HealthWorker extends Worker {
           this.errors = [];
         }
       }).catch((err) => {
-        console.error(err);
+        errorHandler(err);
       })
     }, 5000);
-
 
     super(createWorker);
   }
