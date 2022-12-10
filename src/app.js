@@ -22,46 +22,58 @@ if (config.env !== 'test') {
   app.use(morgan.errorHandler);
 }
 
+console.debug('set security HTTP headers');
 // set security HTTP headers
 app.use(helmet());
 
+console.debug('parse json request body');
 // parse json request body
 app.use(express.json());
 
+console.debug('parse urlencoded request body');
 // parse urlencoded request body
 app.use(express.urlencoded({ extended: true }));
 
+console.debug('sanitize request data');
 // sanitize request data
 app.use(xss());
 app.use(mongoSanitize());
 
+console.debug('gzip compression');
 // gzip compression
 app.use(compression());
 
+console.debug('enable cors');
 // enable cors
 app.use(cors());
 app.options('*', cors());
 
+console.debug('jwt authentication');
 // jwt authentication
 app.use(passport.initialize());
 passport.use('jwt', jwtStrategy);
 
+console.debug('limit repeated failed requests to auth endpoints');
 // limit repeated failed requests to auth endpoints
 if (config.env === 'production') {
   app.use('/v1/auth', authLimiter);
 }
 
+console.debug('v1 api routes');
 // v1 api routes
 app.use('/v1', routes);
 
+console.debug('send back a 404 error for any unknown api request');
 // send back a 404 error for any unknown api request
 app.use((req, res, next) => {
   next(new ApiError(httpStatus.NOT_FOUND, 'Not found'));
 });
 
+console.debug('convert error to ApiError, if needed');
 // convert error to ApiError, if needed
 app.use(errorConverter);
 
+console.debug('handle error');
 // handle error
 app.use(errorHandler);
 const workers = [
