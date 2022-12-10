@@ -42,10 +42,12 @@ const healthWorker = (options) => ({
 
     this.interval = setInterval(() => {
       axios.get(`http://${pingHost}:8080`).then((res) => {
-        if (res.status >= 200 && this.error()) {
+        console.log(res);
+        if (res.status && this.error()) {
           return reconnectHandler();
         }
       }).catch((err) => {
+        console.error(err);
         errorHandler(err);
       })
     }, 5000);
