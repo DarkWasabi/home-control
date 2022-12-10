@@ -77,9 +77,10 @@ console.debug('handle error');
 // handle error
 app.use(errorHandler);
 const workers = [
-  healthWorker
+  healthWorker(),
 ];
 workers.forEach((worker) => {
+  console.debug('starting worker', worker);
   worker.start();
 });
 
