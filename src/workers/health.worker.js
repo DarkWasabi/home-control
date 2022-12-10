@@ -1,16 +1,20 @@
 const axios = require('axios');
+const ping = require('ping');
 const Worker = require('./worker');
 const config = require('../config/config');
 
-class HealthWorker extends Worker {
-    #errors = 0;
+//TODO: move to config
+const pingHost = 'host-176-38-7-39.b026.la.net.ua';
 
-    #errorHandler = () => {
-        this.#errors += 1;
-        if (this.#errors < 3) {
+class HealthWorker extends Worker {
+    #errors = [];
+
+    #errorHandler = (err) => {
+        this.#errors.push(err);
+        if (this.#errors.length < 3) {
             return;
         }
-        if (this.#errors === 3) {
+        if (this.#errors.length === 3) {
             const telegramClient = axios.create({
                 baseURL: config.telegramBotUrl,
                 headers: {
@@ -26,24 +30,30 @@ class HealthWorker extends Worker {
         }
     }
 
-    #createWorker = () => setInterval(() => {
-        axios.get('http://host-176-38-7-39.b026.la.net.ua:8080')
-            .then((res) => {
-                if (res.status > 400) {
-                    this.#errorHandler();
-                    return;
-                }
-                this.#errors = 0;
-            })
-            .catch((error) => {
-                console.error(error);
-                this.#errorHandler();
-            });
-    }, 5000)
-
-
     constructor() {
-        super(this.#createWorker);
+        const createWorker = () => setInterval(() => {
+            ping.promise.probe(pingHost, {
+                timeout: 2, 
+                min_reply: 4,
+            }).then((res) => {
+                const alive = res.alive && res.times.length === 4;
+                console.log(res, `${res.host} is ${alive ? 'alive' : 'dead'}`);
+                if (!alive) {
+                    return this.#errorHandler(res);
+                }
+                // clear errors on success
+                if (this.#errors.length > 0) {
+                    this.#errors = [];
+                }
+            }).catch((err) => {
+                console.error(err);
+            })
+        }, 5000);
+        super(createWorker);
+    }
+
+    getStatus() {
+        return !this.#errors;
     }
 }
 
