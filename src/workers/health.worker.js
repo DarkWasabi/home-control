@@ -3,7 +3,7 @@ const config = require('../config/config');
 
 // TODO: move to config
 const pingHost = 'host-176-38-7-39.b026.la.net.ua';
-const maxRetries = 3;
+const maxRetries = 4;
 
 // TODO:  add options
 const healthWorker = (options) => ({
