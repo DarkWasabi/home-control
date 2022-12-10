@@ -64,9 +64,7 @@ app.use(errorConverter);
 
 // handle error
 app.use(errorHandler);
-const workers = [
-  new HealthWorker(),
-]
+const workers = [new HealthWorker()];
 workers.forEach((worker) => {
   worker.start();
 });

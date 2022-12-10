@@ -1,20 +1,20 @@
 class Worker  {
-    #intervalCreator = null;
-    #interval = null;
+    intervalCreator = null;
+    interval = null;
 
     constructor(intervalCreator) {
-        this.#intervalCreator = intervalCreator;
+        this.intervalCreator = intervalCreator;
     }
 
     start() {
         if (!typeof this.interval === 'function') {
             throw new Error('Callback is not set');
         }
-        this.#interval = this.#intervalCreator();
+        this.interval = this.intervalCreator();
     }
     
     stop() {
-        clearInterval(this.#interval);
+        clearInterval(this.interval);
     }
 }
 
