@@ -48,10 +48,10 @@ const healthWorker = (options) => ({
     this.interval = setInterval(() => {
       axios.get(`http://${pingHost}:8080`).then((res) => {
         console.log(`response status: ${res.status}`);
-        this.errors = [];
         if (this.error()) {
-          return reconnectHandler();
+          reconnectHandler();
         }
+        this.errors = [];
       }).catch((err) => {
         errorHandler(err);
       })
