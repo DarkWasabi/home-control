@@ -20,6 +20,7 @@ const healthWorker = (options) => ({
 
     const errorHandler = (err) => {
       this.errors.push(err);
+      console.err(`errors count: ${this.errors.lenght}`, err);
       if (this.errors.length === maxRetries) {
         telegramClient.post('/sendMessage', {
           chat_id: config.telegramChatId,
@@ -29,6 +30,8 @@ const healthWorker = (options) => ({
     }
 
     const reconnectHandler = async () => {
+      console.log('reconnected, clearing errors');
+      this.errors = [];
       try {
         return await telegramClient.post('/sendMessage', {
           chat_id: config.telegramChatId,
@@ -47,7 +50,6 @@ const healthWorker = (options) => ({
           return reconnectHandler();
         }
       }).catch((err) => {
-        console.error(err);
         errorHandler(err);
       })
     }, 5000);
