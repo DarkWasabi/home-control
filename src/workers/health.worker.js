@@ -29,7 +29,6 @@ const healthWorker = (options) => ({
     }
 
     const reconnectHandler = async () => {
-      this.errors = [];
       try {
         return await telegramClient.post('/sendMessage', {
           chat_id: config.telegramChatId,
@@ -43,7 +42,8 @@ const healthWorker = (options) => ({
     this.interval = setInterval(() => {
       axios.get(`http://${pingHost}:8080`).then((res) => {
         console.log(res);
-        if (res.status && this.error()) {
+        this.errors = [];
+        if (this.error()) {
           return reconnectHandler();
         }
       }).catch((err) => {
