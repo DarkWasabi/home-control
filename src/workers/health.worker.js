@@ -1,10 +1,11 @@
 const axios = require('axios');
 const config = require('../config/config');
 
-//TODO: move to config
+// TODO: move to config
 const pingHost = 'host-176-38-7-39.b026.la.net.ua';
 const maxRetries = 3;
 
+// TODO:  add options
 const healthWorker = (options) => ({
   errors: [],
   interval: null,
@@ -41,16 +42,7 @@ const healthWorker = (options) => ({
 
     this.interval = setInterval(() => {
       axios.get(`http://${pingHost}:8080`).then((res) => {
-        
-        if (this.getStatus() === true) {
-          // handle error response
-          if (res.status >= 400) {
-            return errorHandler(res);
-          }
-          return res;
-        }
-
-        if (res.status >= 200 && res.status < 300) {
+        if (res.status >= 200 && this.error()) {
           return reconnectHandler();
         }
       }).catch((err) => {
@@ -61,8 +53,8 @@ const healthWorker = (options) => ({
   stop() {
     clearInterval(this.interval);
   },
-  getStatus() {
-    return this.errors.length < maxRetries;
+  error() {
+    return this.errors.length >= maxRetries;
   }
 });
 
