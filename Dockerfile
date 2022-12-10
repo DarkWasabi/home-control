@@ -8,6 +8,8 @@ COPY package.json yarn.lock .env.example ./
 
 USER node
 
+RUN yan add -g cross-env
+
 RUN yarn install --pure-lockfile
 
 COPY --chown=node:node . .
