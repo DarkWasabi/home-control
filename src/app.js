@@ -76,12 +76,19 @@ app.use(errorConverter);
 console.debug('handle error');
 // handle error
 app.use(errorHandler);
+const healthWorker = healthWorker();
 const workers = [
-  healthWorker(),
+  healthWorker,
 ];
 workers.forEach((worker) => {
   console.debug('starting worker', worker);
   worker.start();
+});
+app.use('/', (req, res) => {
+  const status = healthWorker.error() ? httpStatus.BAD_GATEWAY : httpStatus.OK;
+  res.status(status).send({
+    status: !healthWorker.error(),
+  });
 });
 
 module.exports = app;
