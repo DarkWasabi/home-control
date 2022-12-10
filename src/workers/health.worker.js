@@ -6,8 +6,10 @@ const config = require('../config/config');
 //TODO: move to config
 const pingHost = 'host-176-38-7-39.b026.la.net.ua';
 
-class HealthWorker extends Worker {
-  constructor() {
+const healthWorker = {
+  errors: [],
+  interval: null,
+  start() {
     const errorHandler = (err) => {
       this.errors.push(err);
       if (this.errors.length < 3) {
@@ -29,8 +31,7 @@ class HealthWorker extends Worker {
       }
     }
 
-    const createWorker = () => setInterval(() => {
-      console.log(`http://${pingHost}:8080`)
+    this.interval = setInterval(() => {
       axios.get(`http://${pingHost}:8080`).then((res) => {
         if (!res.status > 400) {
           return errorHandler(res);
@@ -43,13 +44,10 @@ class HealthWorker extends Worker {
         errorHandler(err);
       })
     }, 5000);
-
-    super(createWorker);
-  }
-
+  },
   getStatus() {
-    return !this.errors;
+    return this.errors.length === 0;
   }
-}
+};
 
-module.exports = HealthWorker;
+module.exports = healthWorker;

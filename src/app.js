@@ -13,7 +13,7 @@ const { authLimiter } = require('./middlewares/rateLimiter');
 const routes = require('./routes/v1');
 const { errorConverter, errorHandler } = require('./middlewares/error');
 const ApiError = require('./utils/ApiError');
-const HealthWorker = require('./workers/health.worker');
+const healthWorker = require('./workers/health.worker');
 
 const app = express();
 
@@ -64,7 +64,9 @@ app.use(errorConverter);
 
 // handle error
 app.use(errorHandler);
-const workers = [new HealthWorker()];
+const workers = [
+  healthWorker
+];
 workers.forEach((worker) => {
   worker.start();
 });
