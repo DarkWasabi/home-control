@@ -30,6 +30,7 @@ class HealthWorker extends Worker {
     }
 
     const createWorker = () => setInterval(() => {
+      console.log(`http://${pingHost}:8080`)
       axios.get(`http://${pingHost}:8080`).then((res) => {
         if (!res.status > 400) {
           return errorHandler(res);
