@@ -23,7 +23,7 @@ const healthWorker = (options) => ({
       if (this.errors.length > 5) {
         this.errors = this.errors.slice(-5);
       }
-      console.error(`errors count: ${this.errors.lenght}`, err);
+      console.error(`errors count: ${this.errors.length}`, err);
       if (this.errors.length === maxRetries) {
         telegramClient.post('/sendMessage', {
           chat_id: config.telegramChatId,
