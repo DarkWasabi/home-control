@@ -46,7 +46,9 @@ const healthWorker = (options) => ({
     }
 
     this.interval = setInterval(() => {
-      axios.get(`http://${pingHost}:8080?t=${Date.now()}`).then((res) => {
+      axios.get(`http://${pingHost}:8080?t=${Date.now()}`, {
+        timeout: 1000,
+      }).then((res) => {
         console.log(`response status: ${res.status}`);
         if (this.error()) {
           reconnectHandler();
