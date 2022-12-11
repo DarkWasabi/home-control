@@ -1,5 +1,6 @@
 const axios = require('axios');
 const config = require('../config/config');
+const http = require('http');
 
 // TODO: move to config
 const pingHost = 'host-176-38-7-39.b026.la.net.ua';
@@ -15,7 +16,8 @@ const healthWorker = (options) => ({
       headers: {
         'Content-Type': 'application/json',
         'Charset': 'utf-8',
-      }
+      },
+      httpAgent: new http.Agent({ keepAlive: false }),
     });
 
     const errorHandler = (err) => {
@@ -48,6 +50,7 @@ const healthWorker = (options) => ({
     this.interval = setInterval(() => {
       axios.get(`http://${pingHost}:8080?t=${Date.now()}`, {
         timeout: 1000,
+        httpAgent: new http.Agent({ keepAlive: false }),
       }).then((res) => {
         console.log(`response status: ${res.status}`);
         if (this.error()) {
