@@ -3,11 +3,10 @@ const config = require('../config/config');
 const http = require('http');
 
 // TODO: move to config
-const pingHost = 'host-176-38-7-39.b026.la.net.ua';
 const maxRetries = 4;
 
 // TODO:  add options
-const healthWorker = (options) => ({
+const healthWorker = ({ host }) => ({
   errors: [],
   interval: null,
   start() {
@@ -48,7 +47,10 @@ const healthWorker = (options) => ({
     }
 
     this.interval = setInterval(() => {
-      axios.get(`http://${pingHost}:8080?t=${Date.now()}`, {
+      axios.get(host, {
+        params: {
+          t: Date.now()
+        },
         timeout: 1000,
         httpAgent: new http.Agent({ keepAlive: false }),
       }).then((res) => {
