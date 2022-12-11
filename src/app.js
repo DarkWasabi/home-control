@@ -14,6 +14,7 @@ const routes = require('./routes/v1');
 const { errorConverter, errorHandler } = require('./middlewares/error');
 const ApiError = require('./utils/ApiError');
 const healthWorker = require('./workers/health.worker');
+const pingWorker = require('./workers/ping.worker');
 
 const app = express();
 
@@ -63,7 +64,7 @@ console.debug('v1 api routes');
 // v1 api routes
 app.use('/v1', routes);
 
-const healthWorkerInstance = healthWorker();
+const healthWorkerInstance = pingWorker();
 const workers = [
   healthWorkerInstance,
 ];
