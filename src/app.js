@@ -64,7 +64,7 @@ console.debug('v1 api routes');
 // v1 api routes
 app.use('/v1', routes);
 
-const healthWorkerInstance = pingWorker();
+const healthWorkerInstance = healthWorker();
 const workers = [
   healthWorkerInstance,
 ];
