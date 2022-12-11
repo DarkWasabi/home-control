@@ -50,6 +50,7 @@ const healthWorker = (options) => ({
       ping.promise.probe(pingHost, {
         timeout: 2,
         min_reply: 4,
+        extra: ['-i', 2],
       }).then((res) => {
         const alive = res.alive && res.times.length === maxRetries;
         console.log(res, `${res.host} is ${alive ? 'alive' : 'dead'}`);
