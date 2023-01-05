@@ -42,7 +42,7 @@ const healthWorker = ({ host }) => ({
       this.aliveFrom = new Date();
       chatIds.forEach((chatId) => {
         telegramClient.post('/sendMessage', {
-          chat_id: config.telegramChatId,
+          chat_id: chatId,
           text: '⚡️ Home is back online!',
         }).catch(err => console.error(err));
       });
