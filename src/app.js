@@ -64,7 +64,9 @@ console.debug('v1 api routes');
 // v1 api routes
 app.use('/v1', routes);
 
-const healthWorkerInstance = healthWorker();
+const healthWorkerInstance = healthWorker({
+  host: 'http://host-176-38-7-39.b026.la.net.ua:8080', // TODO: move to config and .env
+});
 const workers = [
   healthWorkerInstance,
 ];
