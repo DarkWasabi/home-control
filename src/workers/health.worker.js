@@ -27,7 +27,7 @@ const healthWorker = ({ host }) => ({
         this.errors.push(err);
       }
       if (this.errors.length === maxRetries) {
-        this.deadFrom = new Date();
+        this.deadFrom = new Date().toLocaleString('uk-UK', {timezone: 'Europe/Kyiv'});
         chatIds.forEach((chatId) => {
           telegramClient.post('/sendMessage', {
             chat_id: chatId,
@@ -39,7 +39,7 @@ const healthWorker = ({ host }) => ({
 
     const reconnectHandler = async () => {
       this.errors = [];
-      this.aliveFrom = new Date();
+      this.aliveFrom = new Date().toLocaleString('uk-UK', {timezone: 'Europe/Kyiv'});
       chatIds.forEach((chatId) => {
         telegramClient.post('/sendMessage', {
           chat_id: chatId,
