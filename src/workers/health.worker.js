@@ -26,10 +26,14 @@ const healthWorker = ({ host }) => ({
       }
       console.error(`errors count: ${this.errors.length}`, err);
       if (this.errors.length === maxRetries) {
-        telegramClient.post('/sendMessage', {
-          chat_id: config.telegramChatId,
-          text: '📵 There is no power supply!',
-        }).catch(err => console.error(err));
+        const chatIds = [config.telegramChatId].concat(config.additionalChatIds);
+    
+        chatIds.forEach((chatId) => {
+          telegramClient.post('/sendMessage', {
+            chat_id: chatId,
+            text: '📵 There is no power supply!',
+          }).catch(err => console.error(err));
+        })
       }
     }
 

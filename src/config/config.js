@@ -26,6 +26,7 @@ const envVarsSchema = Joi.object()
     TELEGRAM_BOT_ID: Joi.string().description('telegram bot id'),
     TELEGRAM_BOT_SECRET: Joi.string().description('telegram bot secret'),
     TELEGRAM_CHAT_ID: Joi.string().description('telegram chat id'),
+    ADDITIONAL_CHAT_IDS: Joi.string().description('additional telegram chat ids'),
   })
   .unknown();
 
@@ -67,5 +68,6 @@ module.exports = {
   telegramBotId: envVars.TELEGRAM_BOT_ID,
   telegramBotSecret: envVars.TELEGRAM_BOT_SECRET,
   telegramChatId: envVars.TELEGRAM_CHAT_ID,
+  additionalChatIds: envVars.ADDITIONAL_CHAT_IDS.split(','),
   telegramBotUrl: `https://api.telegram.org/bot${envVars.TELEGRAM_BOT_ID}:${envVars.TELEGRAM_BOT_SECRET}`,
 };
