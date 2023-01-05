@@ -80,7 +80,8 @@ router.use('/', (req, res) => {
   const status = healthWorkerInstance.error() ? httpStatus.BAD_GATEWAY : httpStatus.OK;
   res.status(status).send({
     status: !healthWorkerInstance.error(),
-    errors: healthWorkerInstance.errors,
+    aliveFrom: healthWorkerInstance.aliveFrom,
+    deadFrom: healthWorkerInstance.deadFrom,
   });
 });
 app.use(router);
